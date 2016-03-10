@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Les bonnes affaires de l\'IUT</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_inscription">Inscription</string>
+    <string name="title_activity_add_object">AddObject</string>
+    <string name="title_activity_resultat_recherche">Les bonnes affaires de l\'IUT</string>
+</resources>
