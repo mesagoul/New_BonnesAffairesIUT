@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -55,6 +56,10 @@ public class AddObject extends Activity {
     private List<String> listImageObjet = new ArrayList<String>();
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView photo1,photo2,photo3,imageX;
+    private String photo1_string, photo2_string,photo3_string;
+    private boolean photo1ok,photo2ok,photo3ok;
+    private Uri filepath;
+    private Bitmap photo1_bitmap,photo2_bitmap,photo3_bitmap,photoX_bitmap;
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
 
     @Override
@@ -118,8 +123,15 @@ public class AddObject extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            filepath = data.getData();
+            try {
+                photoX_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+            }catch(IOException e ){
+                e.printStackTrace();
+            }
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -128,7 +140,13 @@ public class AddObject extends Activity {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
+            if(photo1.getDrawable()== null)
+            Log.d("DEBUG PHOTO", "Ello C'est vide");
+            else
+                Log.d("DEBUG PHOTO", "Ello C'est plein");
+            photo1_bitmap = BitmapFactory.decodeFile(picturePath);
             imageX.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
 
 
             // String picturePath contains the path of selected Image
@@ -243,6 +261,13 @@ public class AddObject extends Activity {
         //display loading and status
         protected void onPreExecute() {
             Log.d("AddObjet", "Connexion add object start");
+
+            if(photo1.getDrawable() != null){
+                photo1ok = true;
+                photo1_string = getStringImage(photo1.getDrawingCache());
+
+
+            }
           //  Log.d("AddPHOTO",photo1.getContentDescription()+"");
             //if(photo1.getContentDescription() == ""){}
 
