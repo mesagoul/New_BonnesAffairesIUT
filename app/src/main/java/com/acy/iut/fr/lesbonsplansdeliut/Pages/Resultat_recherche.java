@@ -2,15 +2,20 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Debug;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -38,29 +43,55 @@ public class Resultat_recherche extends Activity {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
-    ListView result_listView;
-    List<Objet> result_List = new ArrayList<Objet>();
+
+    //Déclaration des valeurs necessaire à la création du rechercheDrawer
+    private String[] mPlanetTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
+    //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
+    private ListView result_listView;
+    private List<Objet> result_List = new ArrayList<Objet>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultat_recherche);
+        //Initialisation de la ListView des resultat de la recherche
         result_listView = (ListView) findViewById(R.id.result_listView);
 
+        //Initialisation des variables de la listView du drawer
+        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_recherche, mPlanetTitles));
+
+
         new Research().execute();
-
-        //TEST
-        //result_List.add(new Objet("Portable", "tres bon etat", 100));
-        //result_List.add(new Objet("Chien", "tres bon etat", 200));
-        //result_List.add(new Objet("Chat", "un peu usé", 120));
-
-        //RechercheAdapter adapter = new RechercheAdapter(Resultat_recherche.this, result_List);
-        //result_listView.setAdapter(adapter);
     }
 
     public void AddObjectClick(View v){
         Intent resultat_to_addObj = new Intent(Resultat_recherche.this, AddObject.class);
         startActivity(resultat_to_addObj);
+    }
+
+
+    // http://developer.android.com/training/implementing-navigation/nav-drawer.html
+    public void openDrawerClick(AdapterView parent, View view, int position, long id) {
+        selectItem(position);
+    }
+
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+
     }
 
     @Override
