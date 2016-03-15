@@ -57,9 +57,9 @@ public class AddObject extends Activity {
     private static int RESULT_LOAD_IMAGE = 1;
     private ImageView photo1,photo2,photo3,imageX;
     private String photo1_string, photo2_string,photo3_string;
-    private boolean photo1ok,photo2ok,photo3ok;
+    private boolean photo1ok = false,photo2ok = false,photo3ok = false;
     private Uri filepath;
-    private Bitmap photo1_bitmap,photo2_bitmap,photo3_bitmap,photoX_bitmap;
+    private Bitmap photo1_bitmap = null,photo2_bitmap = null,photo3_bitmap= null,photoX_bitmap;
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
 
     @Override
@@ -127,11 +127,6 @@ public class AddObject extends Activity {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             filepath = data.getData();
-            try {
-                photoX_bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
-            }catch(IOException e ){
-                e.printStackTrace();
-            }
 
             Cursor cursor = getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -146,6 +141,28 @@ public class AddObject extends Activity {
                 Log.d("DEBUG PHOTO", "Ello C'est plein");
             photo1_bitmap = BitmapFactory.decodeFile(picturePath);
             imageX.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            try {
+                if(photo1.getDrawable() != null)
+                {
+                    photo1_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo1ok = true;
+                    Log.d("PHOTO 1"," REMPLIE");
+                }
+                if(photo2.getDrawable() != null)
+                {
+                    photo2_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo2ok = true;
+                    Log.d("PHOTO 2"," REMPLIE");
+                }
+                if(photo3.getDrawable() != null)
+                {
+                    photo3_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo3ok = true;
+                    Log.d("PHOTO 3"," REMPLIE");
+                }
+            }catch(IOException e ){
+                e.printStackTrace();
+            }
 
 
 
@@ -261,16 +278,6 @@ public class AddObject extends Activity {
         //display loading and status
         protected void onPreExecute() {
             Log.d("AddObjet", "Connexion add object start");
-
-            if(photo1.getDrawable() != null){
-                photo1ok = true;
-                photo1_string = getStringImage(photo1.getDrawingCache());
-
-
-            }
-          //  Log.d("AddPHOTO",photo1.getContentDescription()+"");
-            //if(photo1.getContentDescription() == ""){}
-
         }
         //Get JSON data from the URL
         @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -286,7 +293,21 @@ public class AddObject extends Activity {
                     url = new URL(LOGIN_URL);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    ob.setUrl_photo1(listImageObjet);
+                    if(photo1ok){
+                        listImageObjet.add(getStringImage(photo1_bitmap));
+                        photo1ok = false;
+                    }
+                    if(photo2ok)
+                    {
+                        listImageObjet.add(getStringImage(photo2_bitmap));
+                        photo1ok = false;
+                    }
+                    if(photo3ok)
+                    {
+                        listImageObjet.add(getStringImage(photo3_bitmap));
+                        photo1ok = false;
+                    }
+                    //ob.setUrl_photo1(listImageObjet);
                     String urlParameters = "nomObjet=" + ob.getNom() + "&&id_user="+ob.getId_utilisateur()+"&&descriptionObjet=" + ob.getDescription() + "&&prixObjet=" + ob.getPrix() + "&&idCategorieObjet=" + ob.getId_categorie() + "&&method=" + "AddObjet";
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                     //write post data to URL
@@ -312,8 +333,12 @@ public class AddObject extends Activity {
 
             try {
                 //alert the user of the status of the connection
-                success = result.getInt(FLAG_SUCCESS);
+                //success = result.getInt(FLAG_SUCCESS);
                 Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
+                Intent AddObject_to_resultatObjet = new Intent(AddObject.this, Resultat_recherche.class);
+                startActivity(AddObject_to_resultatObjet);
+                //testText.setText(result.getString(FLAG_MESSAGE)+"");
+               // Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
                 //testText.setText(result.getString(FLAG_MESSAGE)+"");
             } catch (JSONException e) {
                 Log.e("JSON Parser", "Error parsing data " + e.toString());
