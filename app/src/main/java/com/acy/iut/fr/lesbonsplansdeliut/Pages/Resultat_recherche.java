@@ -43,7 +43,7 @@ public class Resultat_recherche extends Activity {
     private static final String FLAG_MESSAGE = "message";
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
 
-    //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
+    //Declaration des valeurs necessaire a la creation de la listView des resultats de la recherche
     private ListView result_listView;
     private List<Objet> result_List = new ArrayList<Objet>();
 

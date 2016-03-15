@@ -19,7 +19,7 @@ import java.util.List;
  * Created by boinnarr on 08/03/2016.
  */
 public class RechercheAdapter extends ArrayAdapter<Objet> {
-    //objets est la liste des models à afficher
+    //objets est la liste des models a afficher
     public RechercheAdapter(Context context, List<Objet> objets) {
         super(context, 0, objets);
     }
@@ -43,10 +43,10 @@ public class RechercheAdapter extends ArrayAdapter<Objet> {
             convertView.setTag(viewHolder);
         }
 
-        //getItem(position) va récupérer l'item [position] de la List<Objet> objets
+        //getItem(position) va recuperer l'item [position] de la List<Objet> objets
         Objet objet = getItem(position);
 
-        //il ne reste plus qu'à remplir notre vue
+        //il ne reste plus qu'a remplir notre vue
         viewHolder.titre.setText(objet.getNom());
         viewHolder.desc.setText(objet.getDescription());
 

@@ -14,7 +14,6 @@ import android.widget.TextView;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
-import com.acy.iut.fr.lesbonsplansdeliut.Outils.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -51,7 +50,7 @@ public class AfficheObjet extends Activity {
         mail_personne = (TextView)(findViewById(R.id.mail_personne));
 
         nom_objet.setText(ob.getNom());
-        prix_objet.setText(ob.getPrix()+ " €");
+        prix_objet.setText(ob.getPrix()+ " euros ");
         descriptionObjet.setText(ob.getDescription());
 
 
