@@ -1,12 +1,13 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Objets;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by boinnarr on 01/03/2016.
  */
-public class Objet {
+public class Objet implements Serializable {
     private int id;
     private int id_utilisateur;
     private int id_categorie;

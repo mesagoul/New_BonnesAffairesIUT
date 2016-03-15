@@ -40,6 +40,10 @@
             android:name=".Pages.MesObjets"
             android:label="@string/title_activity_mes_objets" >
         </activity>
+        <activity
+            android:name=".Pages.AfficheObjet"
+            android:label="@string/title_activity_affiche_objet" >
+        </activity>
     </application>
 
 </manifest>

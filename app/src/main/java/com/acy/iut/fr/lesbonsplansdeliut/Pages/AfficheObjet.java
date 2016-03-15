@@ -2,21 +2,19 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
-import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
+import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
+import com.acy.iut.fr.lesbonsplansdeliut.Outils.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -29,52 +27,41 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 
-public class MesObjets extends Activity {
+public class AfficheObjet extends Activity {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String URL = "http://rudyboinnard.esy.es/android/";
-    private List<Objet> result_List = new ArrayList<Objet>();
-    private ListView mes_objets_liste;
+    public Objet ob;
+    public TextView nom_objet,prix_objet,descriptionObjet,nom_personne,mail_personne;
+    public ImageView image_objet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new LoadPage().execute();
-        setContentView(R.layout.activity_mes_objets);
-        mes_objets_liste = (ListView)findViewById(R.id.my_objects_list);
+        ob = (Objet)getIntent().getSerializableExtra("Objet");
+        setContentView(R.layout.activity_affiche_objet);
+
+        nom_objet = (TextView)(findViewById(R.id.nom_objet));
+        prix_objet = (TextView)(findViewById(R.id.prix_objet));
+        descriptionObjet = (TextView)(findViewById(R.id.description_objet));
+        nom_personne = (TextView)(findViewById(R.id.nom_personne));
+        mail_personne = (TextView)(findViewById(R.id.mail_personne));
+
+        nom_objet.setText(ob.getNom());
+        prix_objet.setText(ob.getPrix()+ " €");
+        descriptionObjet.setText(ob.getDescription());
 
 
-        String[] mStrings = {"AAAA"};
 
-//Creation de l'adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mStrings);
-
-//On passe nos donnees au composant ListView
-        mes_objets_liste.setAdapter(adapter);
-        mes_objets_liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView parentView, View childView,
-                                    int position, long id) {
-                Objet ob =  (Objet)(mes_objets_liste.getItemAtPosition(position));
-                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
-                Intent MesObjets_to_Affiche_Objet = new Intent(MesObjets.this, AfficheObjet.class);
-                MesObjets_to_Affiche_Objet.putExtra("Objet",ob);
-                startActivity(MesObjets_to_Affiche_Objet);
-            }
-
-        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mes_objets, menu);
+        getMenuInflater().inflate(R.menu.menu_affiche_objet, menu);
         return true;
     }
 
@@ -92,8 +79,6 @@ public class MesObjets extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
     //async call to the php script
     class LoadPage extends AsyncTask<Credential, String, JSONObject> {
 
@@ -122,7 +107,7 @@ public class MesObjets extends Activity {
                     url = new URL(URL);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    String urlParameters = "method=MesObjets" + "&&id_user="+Main.UserLog.getId();
+                    String urlParameters = "method=UtilisateurbyID" + "&&id_user="+ob.getId_utilisateur();
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                     //write post data to URL
                     DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
@@ -150,25 +135,8 @@ public class MesObjets extends Activity {
                 if(success == 0){
                     System.out.println("Marchepas");
                 }else{
-
-                    JSONArray jArrayID = (result.getJSONArray("id_objet"));
-                    JSONArray jArrayID_CAT = (result.getJSONArray("id_categorie"));
-                    JSONArray jArrayID_USER = (result.getJSONArray("id_utilisateur"));
-                    JSONArray jArrayNOM_OBJET = (result.getJSONArray("nom_objet"));
-                    JSONArray jArrayDESC_OBJET = (result.getJSONArray("description_objet"));
-                    JSONArray jArrayprix_OBJET = (result.getJSONArray("prix_objet"));
-                    if (jArrayID != null) {
-                        for (int i=0;i<jArrayID.length();i++){
-                            result_List.add(new Objet(Integer.parseInt(jArrayID.get(i).toString()),Double.parseDouble((jArrayprix_OBJET.get(i).toString())),jArrayDESC_OBJET.get(i).toString(),jArrayNOM_OBJET.get(i).toString(),Integer.parseInt(jArrayID_CAT.get(i).toString()),Integer.parseInt(jArrayID_USER.get(i).toString())));
-                        }
-                    }
-
-                    System.out.println("Marche");
-                    System.out.println(result.getString("nom_objet"));
-                    Log.d("DEBUG OBJET AFFICHE", result.toString());
-                    // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
-                    RechercheAdapter adapter = new RechercheAdapter(MesObjets.this, result_List);
-                    mes_objets_liste.setAdapter(adapter);
+                    nom_personne.setText(result.getString("nom")+" "+result.getString("prenom"));
+                    mail_personne.setText(result.getString("mail"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -181,5 +149,4 @@ public class MesObjets extends Activity {
             }
         }
     }
-
 }
