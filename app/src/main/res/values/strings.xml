@@ -6,4 +6,5 @@
     <string name="title_activity_inscription">Inscription</string>
     <string name="title_activity_add_object">AddObject</string>
     <string name="title_activity_resultat_recherche">Les bonnes affaires de l\'IUT</string>
+    <string name="title_activity_mes_objets">MesObjets</string>
 </resources>

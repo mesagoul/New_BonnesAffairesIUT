@@ -2,22 +2,13 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
@@ -37,86 +28,56 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Resultat_recherche extends Activity {
 
-    //static fields for ease of access
+public class MesObjets extends Activity {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
-    private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
-
-    //Déclaration des valeurs necessaire à la création du rechercheDrawer
-    private String[] mPlanetTitles;
-    private DrawerLayout mDrawerLayout;
-    private ListView mDrawerList;
-
-    //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
-    private ListView result_listView;
+    private static final String URL = "http://rudyboinnard.esy.es/android/";
     private List<Objet> result_List = new ArrayList<Objet>();
+    private ListView mes_objets_liste;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_resultat_recherche);
-        //Initialisation de la ListView des resultat de la recherche
-        result_listView = (ListView) findViewById(R.id.result_listView);
-
-        //Initialisation des variables de la listView du drawer
-        mPlanetTitles = getResources().getStringArray(R.array.planets_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-         //       R.layout.drawer_recherche, mPlanetTitles));
-
-
-        new Research().execute();
-    }
-
-    public void AddObjectClick(View v){
-        Intent resultat_to_addObj = new Intent(Resultat_recherche.this, AddObject.class);
-        startActivity(resultat_to_addObj);
-    }
-    public void mesObjetsClick(View v){
-        Intent resultat_to_mesObj = new Intent(Resultat_recherche.this, MesObjets.class);
-        startActivity(resultat_to_mesObj);
-    }
-
-
-    // http://developer.android.com/training/implementing-navigation/nav-drawer.html
-    public void openDrawerClick(AdapterView parent, View view, int position, long id) {
-        selectItem(position);
-    }
-
-    /** Swaps fragments in the main content view */
-    private void selectItem(int position) {
-
-    }
-
-    @Override
-    public void setTitle(CharSequence title) {
-
+        new LoadPage().execute();
+        setContentView(R.layout.activity_mes_objets);
+        mes_objets_liste = (ListView)findViewById(R.id.my_objects_list);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_resultat_recherche, menu);
+        getMenuInflater().inflate(R.menu.menu_mes_objets, menu);
         return true;
     }
 
-    //convert an inputstream to a string
-    public String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     //async call to the php script
-    class Research extends AsyncTask<Credential, String, JSONObject> {
+    class LoadPage extends AsyncTask<Credential, String, JSONObject> {
 
         //display loading and status
         protected void onPreExecute() {
 
+        }
+
+        //convert an inputstream to a string
+        public String convertStreamToString(java.io.InputStream is) {
+            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+            return s.hasNext() ? s.next() : "";
         }
 
         //Get JSON data from the URL
@@ -130,10 +91,10 @@ public class Resultat_recherche extends Activity {
                 HttpURLConnection connection = null;
                 try {
                     //initialize connection
-                    url = new URL(LOGIN_URL);
+                    url = new URL(URL);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    String urlParameters = "method=Research";
+                    String urlParameters = "method=MesObjets" + "&&id_user="+Main.UserLog.getId();
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                     //write post data to URL
                     DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
@@ -177,9 +138,9 @@ public class Resultat_recherche extends Activity {
                     System.out.println("Marche");
                     System.out.println(result.getString("nom_objet"));
                     Log.d("DEBUG OBJET AFFICHE", result.toString());
-                   // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
-                    RechercheAdapter adapter = new RechercheAdapter(Resultat_recherche.this, result_List);
-                    result_listView.setAdapter(adapter);
+                    // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
+                    RechercheAdapter adapter = new RechercheAdapter(MesObjets.this, result_List);
+                    mes_objets_liste.setAdapter(adapter);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -191,20 +152,5 @@ public class Resultat_recherche extends Activity {
                 Log.d("Error", "Error");
             }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

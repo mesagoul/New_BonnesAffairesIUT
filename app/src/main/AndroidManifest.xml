@@ -10,12 +10,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        >
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".Pages.Main"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,17 +24,21 @@
         <activity
             android:name=".Pages.Inscription"
             android:label="@string/title_activity_inscription"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".Pages.AddObject"
             android:label="@string/title_activity_add_object"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name=".Pages.Resultat_recherche"
             android:label="@string/title_activity_resultat_recherche"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name=".Pages.MesObjets"
+            android:label="@string/title_activity_mes_objets" >
         </activity>
     </application>
 
