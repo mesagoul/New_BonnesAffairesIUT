@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
-import com.acy.iut.fr.lesbonsplansdeliut.Outils.RechercheAdapter;
+import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;

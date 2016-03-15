@@ -1,4 +1,4 @@
-package com.acy.iut.fr.lesbonsplansdeliut.Outils;
+package com.acy.iut.fr.lesbonsplansdeliut.Adapter;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
