@@ -66,8 +66,8 @@ public class Resultat_recherche extends Activity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_recherche, mPlanetTitles));
+        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+         //       R.layout.drawer_recherche, mPlanetTitles));
 
 
         new Research().execute();
