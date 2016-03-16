@@ -2,6 +2,7 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,11 +11,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.AfficheObjet;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -55,6 +59,20 @@ public class RechercheFragment extends Fragment {
         result_listView = (ListView) rootView.findViewById(R.id.result_listView);
 
         new Research().execute();
+
+        result_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView parentView, View childView,
+                                    int position, long id) {
+                Objet ob = (Objet) (result_listView.getItemAtPosition(position));
+                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
+                Intent MesObjets_to_Affiche_Objet = new Intent(getActivity(), AfficheObjet.class);
+                MesObjets_to_Affiche_Objet.putExtra("Objet", ob);
+                startActivity(MesObjets_to_Affiche_Objet);
+            }
+
+        });
 
         return rootView;
     }
