@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.NavDrawerListAdapter;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.AddObjectFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.MesObjetsFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Model.NavDrawerItem;
@@ -163,6 +164,9 @@ public class Main extends Activity {
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();
+                break;
+            case 1:
+                fragment = new AddObjectFragment();
                 break;
             case 2:
                 fragment = new MesObjetsFragment();

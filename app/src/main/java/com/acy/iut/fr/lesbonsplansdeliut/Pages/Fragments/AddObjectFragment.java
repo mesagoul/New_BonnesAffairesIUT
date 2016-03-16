@@ -1,7 +1,8 @@
-package com.acy.iut.fr.lesbonsplansdeliut.Pages;
+package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,9 +14,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.AddObject;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.MesObjets;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -41,8 +45,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+public class AddObjectFragment extends Fragment{
 
-public class AddObject extends Activity {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String URL = "http://rudyboinnard.esy.es/android/";
@@ -57,44 +61,32 @@ public class AddObject extends Activity {
     private Uri filepath;
     private Bitmap photo1_bitmap = null,photo2_bitmap = null,photo3_bitmap= null,photoX_bitmap;
 
+    private View rootView;
+
+    public AddObjectFragment(){}
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_object);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        rootView = inflater.inflate(R.layout.activity_add_object, container, false);
+
         new LoadPage().execute();
 
-        titreObjet = (EditText) findViewById(R.id.titreObjet);
-        spinnerCategories = (Spinner) findViewById(R.id.spinnerCategories);
-        photo1 = (ImageView) findViewById(R.id.photo1);
-        photo2 = (ImageView) findViewById(R.id.photo2);
-        photo3 = (ImageView) findViewById(R.id.photo3);
-        titreObjet = (EditText) findViewById(R.id.titreObjet);
-        descriptionObjet = (EditText) findViewById(R.id.descriptionObjet);
-        prixObjet = (EditText) findViewById(R.id.prix);
+        titreObjet = (EditText) rootView.findViewById(R.id.titreObjet);
+        spinnerCategories = (Spinner) rootView.findViewById(R.id.spinnerCategories);
+        photo1 = (ImageView) rootView.findViewById(R.id.photo1);
+        photo2 = (ImageView) rootView.findViewById(R.id.photo2);
+        photo3 = (ImageView) rootView.findViewById(R.id.photo3);
+        titreObjet = (EditText) rootView.findViewById(R.id.titreObjet);
+        descriptionObjet = (EditText) rootView.findViewById(R.id.descriptionObjet);
+        prixObjet = (EditText) rootView.findViewById(R.id.prix);
         Log.d("DEBUG", Connection.UserLog.getLogin());
+
+
+        return rootView;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_object, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     public void ClickAddObject(View v){
         Log.d("DEBUG OBJECT","Clicki on  Add OBject");
         new AddObjet().execute();
@@ -102,11 +94,11 @@ public class AddObject extends Activity {
 
     public void ClickAddPhotoBtn(View v){
         if(v.getId() == R.id.btnAddPhoto){
-            imageX = (ImageView)findViewById(R.id.photo1);
+            imageX = (ImageView)rootView.findViewById(R.id.photo1);
         }else if (v.getId() == R.id.btnAddPhoto2){
-            imageX = (ImageView)findViewById(R.id.photo2);
+            imageX = (ImageView)rootView.findViewById(R.id.photo2);
         }else if (v.getId() == R.id.btnAddPhoto3){
-            imageX = (ImageView)findViewById(R.id.photo3);
+            imageX = (ImageView)rootView.findViewById(R.id.photo3);
         }
         Intent i = new Intent(
                 Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -114,16 +106,16 @@ public class AddObject extends Activity {
         startActivityForResult(i, RESULT_LOAD_IMAGE);
     }
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && null != data) {
 
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             filepath = data.getData();
 
-            Cursor cursor = getContentResolver().query(selectedImage,
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
             cursor.moveToFirst();
 
@@ -131,7 +123,7 @@ public class AddObject extends Activity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             if(photo1.getDrawable()== null)
-            Log.d("DEBUG PHOTO", "Ello C'est vide");
+                Log.d("DEBUG PHOTO", "Ello C'est vide");
             else
                 Log.d("DEBUG PHOTO", "Ello C'est plein");
             photo1_bitmap = BitmapFactory.decodeFile(picturePath);
@@ -139,19 +131,19 @@ public class AddObject extends Activity {
             try {
                 if(photo1.getDrawable() != null)
                 {
-                    photo1_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo1_bitmap =  MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
                     photo1ok = true;
                     Log.d("PHOTO 1"," REMPLIE");
                 }
                 if(photo2.getDrawable() != null)
                 {
-                    photo2_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo2_bitmap =  MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
                     photo2ok = true;
                     Log.d("PHOTO 2"," REMPLIE");
                 }
                 if(photo3.getDrawable() != null)
                 {
-                    photo3_bitmap =  MediaStore.Images.Media.getBitmap(getContentResolver(), filepath);
+                    photo3_bitmap =  MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filepath);
                     photo3ok = true;
                     Log.d("PHOTO 3"," REMPLIE");
                 }
@@ -179,7 +171,7 @@ public class AddObject extends Activity {
             JSONObject json = null;
             try {
                 Log.d("request", "starting GetCategories");
-                URL url = null;
+                java.net.URL url = null;
                 HttpURLConnection connection = null;
                 try {
                     //initialize connection
@@ -245,7 +237,7 @@ public class AddObject extends Activity {
 
     public void fillSpinner(Spinner spinner, List<String> list) {
         // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
         Log.d("Spinner", "Spinner adaptee");
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -327,8 +319,8 @@ public class AddObject extends Activity {
             int success = 0;
 
             try {
-                Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
-                Intent AddObject_to_MesObjets = new Intent(AddObject.this, MesObjets.class);
+                Toast.makeText(getActivity(), result.getString("message"), Toast.LENGTH_SHORT).show();
+                Intent AddObject_to_MesObjets = new Intent(getActivity(), MesObjets.class);
                 startActivity(AddObject_to_MesObjets);
 
             } catch (JSONException e) {
@@ -343,4 +335,5 @@ public class AddObject extends Activity {
             }
         }
     }
+
 }
