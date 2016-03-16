@@ -24,9 +24,9 @@
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
-        <item>@drawable/logo</item>
-        <item>@drawable/logo</item>
-        <item>@drawable/logo</item>
+        <item>@drawable/search</item>
+        <item>@drawable/add</item>
+        <item>@drawable/wardrobe</item>
         <item>@drawable/logo</item>
         <item>@drawable/logo</item>
         <item>@drawable/logo</item>
