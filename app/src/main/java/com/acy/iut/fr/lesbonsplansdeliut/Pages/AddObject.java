@@ -332,14 +332,10 @@ public class AddObject extends Activity {
             int success = 0;
 
             try {
-                //alert the user of the status of the connection
-                //success = result.getInt(FLAG_SUCCESS);
                 Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
-                Intent AddObject_to_resultatObjet = new Intent(AddObject.this, Resultat_recherche.class);
-                startActivity(AddObject_to_resultatObjet);
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
-               // Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
+                Intent AddObject_to_MesObjets = new Intent(AddObject.this, MesObjets.class);
+                startActivity(AddObject_to_MesObjets);
+
             } catch (JSONException e) {
                 Log.e("JSON Parser", "Error parsing data " + e.toString());
                 //e.printStackTrace();

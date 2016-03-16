@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.NavDrawerListAdapter;
@@ -64,6 +66,8 @@ public class Resultat_recherche extends Activity {
 
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
+
+
 
 
     @Override
@@ -142,6 +146,31 @@ public class Resultat_recherche extends Activity {
         result_listView = (ListView) findViewById(R.id.result_listView);
 
         new Research().execute();
+
+        // Quand on clique sur un item de la liste
+
+        String[] mStrings = {""};
+
+//Creation de l'adapter
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mStrings);
+
+//On passe nos donnees au composant ListView
+        result_listView.setAdapter(adapter2);
+        result_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView parentView, View childView,
+                                    int position, long id) {
+                Objet ob = (Objet) (result_listView.getItemAtPosition(position));
+                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
+                Intent Resultat_recherche_to_Affiche_Objet = new Intent(Resultat_recherche.this, AfficheObjet.class);
+                Resultat_recherche_to_Affiche_Objet.putExtra("Objet", ob);
+                startActivity(Resultat_recherche_to_Affiche_Objet);
+            }
+
+        });
+
+
     }
 
 
@@ -165,6 +194,8 @@ public class Resultat_recherche extends Activity {
     public void openDrawerClick(View view) {
 
     }
+
+
 
     //async call to the php script
     class Research extends AsyncTask<Credential, String, JSONObject> {

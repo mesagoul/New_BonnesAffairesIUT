@@ -69,5 +69,15 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/mail_personne" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SUPPRIMER"
+            android:id="@+id/supprimer"
+            android:layout_gravity="right"
+            android:enabled="true"
+            android:visibility="visible"
+            android:onClick="DeleteObjet" />
+
     </LinearLayout>
 </ScrollView>

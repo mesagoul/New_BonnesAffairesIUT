@@ -49,7 +49,7 @@ public class MesObjets extends Activity {
         mes_objets_liste = (ListView)findViewById(R.id.my_objects_list);
 
 
-        String[] mStrings = {"AAAA"};
+        String[] mStrings = {""};
 
 //Creation de l'adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mStrings);
