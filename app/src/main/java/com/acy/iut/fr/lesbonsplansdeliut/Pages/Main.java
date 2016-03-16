@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.NavDrawerListAdapter;
-import com.acy.iut.fr.lesbonsplansdeliut.Fragments.RechercheFragment;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.MesObjetsFragment;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Model.NavDrawerItem;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
@@ -169,6 +169,9 @@ public class Main extends Activity {
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();
+                break;
+            case 2:
+                fragment = new MesObjetsFragment();
                 break;
             default:
                 break;

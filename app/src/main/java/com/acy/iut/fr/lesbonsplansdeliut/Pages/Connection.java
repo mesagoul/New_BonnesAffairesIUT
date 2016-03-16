@@ -37,7 +37,7 @@ public class Connection extends Activity {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
-    static Utilisateur UserLog = new Utilisateur();
+    public static Utilisateur UserLog = new Utilisateur();
 
     //graphic interface fields
     private EditText username, password;
