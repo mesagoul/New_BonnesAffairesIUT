@@ -17,10 +17,8 @@ import android.widget.Toast;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
-import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,7 +59,7 @@ public class AfficheObjet extends Activity {
         prix_objet.setText(ob.getPrix()+ " euros ");
         descriptionObjet.setText(ob.getDescription());
 
-        if(ob.getId_utilisateur() == Main.UserLog.getId()){
+        if(ob.getId_utilisateur() == Connection.UserLog.getId()){
             supprimer.setVisibility(View.VISIBLE);
             supprimer.setEnabled(true);
 
@@ -224,7 +222,7 @@ public class AfficheObjet extends Activity {
                 //alert the user of the status of the connection
                 success = result.getInt(FLAG_SUCCESS);
                 Toast.makeText(AfficheObjet.this, result.getString("message"),Toast.LENGTH_SHORT).show();
-                Intent Affiche_Objet_to_Resultat_Recherche = new Intent(AfficheObjet.this, Resultat_recherche.class);
+                Intent Affiche_Objet_to_Resultat_Recherche = new Intent(AfficheObjet.this, Main.class);
                 startActivity(Affiche_Objet_to_Resultat_Recherche);
             } catch (JSONException e) {
                 e.printStackTrace();

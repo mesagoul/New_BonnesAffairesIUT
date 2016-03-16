@@ -148,7 +148,7 @@ public class Inscription extends Activity {
                 success = result.getInt(FLAG_SUCCESS);
                 Toast.makeText(Inscription.this, (String)result.getString(FLAG_MESSAGE),
                         Toast.LENGTH_LONG).show();
-                Intent inscription_to_main = new Intent(Inscription.this, Main.class);
+                Intent inscription_to_main = new Intent(Inscription.this, Connection.class);
                 startActivity(inscription_to_main);
                 //testText.setText(result.getString(FLAG_MESSAGE)+"");
             } catch (JSONException e) {

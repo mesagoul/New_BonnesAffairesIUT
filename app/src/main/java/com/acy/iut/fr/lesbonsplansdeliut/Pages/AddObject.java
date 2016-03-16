@@ -2,8 +2,6 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.DownloadManager;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -41,9 +39,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 
 public class AddObject extends Activity {
@@ -76,7 +72,7 @@ public class AddObject extends Activity {
         titreObjet = (EditText) findViewById(R.id.titreObjet);
         descriptionObjet = (EditText) findViewById(R.id.descriptionObjet);
         prixObjet = (EditText) findViewById(R.id.prix);
-        Log.d("DEBUG", Main.UserLog.getLogin());
+        Log.d("DEBUG", Connection.UserLog.getLogin());
     }
 
     @Override
@@ -274,7 +270,7 @@ public class AddObject extends Activity {
 
 
     class AddObjet extends AsyncTask<Utilisateur, String, JSONObject> {
-        private Objet ob = new Objet(Main.UserLog.getId(),(int)(spinnerCategories.getSelectedItemId()+1),titreObjet.getText().toString(), descriptionObjet.getText().toString(), Double.parseDouble(prixObjet.getText().toString()));
+        private Objet ob = new Objet(Connection.UserLog.getId(),(int)(spinnerCategories.getSelectedItemId()+1),titreObjet.getText().toString(), descriptionObjet.getText().toString(), Double.parseDouble(prixObjet.getText().toString()));
         //display loading and status
         protected void onPreExecute() {
             Log.d("AddObjet", "Connexion add object start");

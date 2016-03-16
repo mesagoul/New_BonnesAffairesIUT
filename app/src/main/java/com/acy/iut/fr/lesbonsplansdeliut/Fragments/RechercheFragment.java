@@ -1,22 +1,24 @@
-package com.acy.iut.fr.lesbonsplansdeliut.Pages;
+package com.acy.iut.fr.lesbonsplansdeliut.Fragments;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
-import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.AddObject;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -32,79 +34,48 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+public class RechercheFragment extends Fragment {
 
-public class MesObjets extends Activity {
+    //static fields for ease of access
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
-    private static final String URL = "http://rudyboinnard.esy.es/android/";
+    private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
+
+    //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
+    private ListView result_listView;
     private List<Objet> result_List = new ArrayList<Objet>();
-    private ListView mes_objets_liste;
+
+
+    public RechercheFragment(){}
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        new LoadPage().execute();
-        setContentView(R.layout.activity_mes_objets);
-        mes_objets_liste = (ListView)findViewById(R.id.my_objects_list);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
+        View rootView = inflater.inflate(R.layout.fragment_recherche, container, false);
 
-        String[] mStrings = {""};
+        //Initialisation de la ListView des resultat de la recherche
+        result_listView = (ListView) rootView.findViewById(R.id.result_listView);
 
-//Creation de l'adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mStrings);
+        new Research().execute();
 
-//On passe nos donnees au composant ListView
-        mes_objets_liste.setAdapter(adapter);
-        mes_objets_liste.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView parentView, View childView,
-                                    int position, long id) {
-                Objet ob =  (Objet)(mes_objets_liste.getItemAtPosition(position));
-                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
-                Intent MesObjets_to_Affiche_Objet = new Intent(MesObjets.this, AfficheObjet.class);
-                MesObjets_to_Affiche_Objet.putExtra("Objet",ob);
-                startActivity(MesObjets_to_Affiche_Objet);
-            }
-
-        });
+        return rootView;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mes_objets, menu);
-        return true;
+
+    //convert an inputstream to a string
+    public String convertStreamToString(java.io.InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     //async call to the php script
-    class LoadPage extends AsyncTask<Credential, String, JSONObject> {
+    class Research extends AsyncTask<Credential, String, JSONObject> {
 
         //display loading and status
         protected void onPreExecute() {
 
-        }
-
-        //convert an inputstream to a string
-        public String convertStreamToString(java.io.InputStream is) {
-            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-            return s.hasNext() ? s.next() : "";
         }
 
         //Get JSON data from the URL
@@ -118,10 +89,10 @@ public class MesObjets extends Activity {
                 HttpURLConnection connection = null;
                 try {
                     //initialize connection
-                    url = new URL(URL);
+                    url = new URL(LOGIN_URL);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    String urlParameters = "method=MesObjets" + "&&id_user="+ Connection.UserLog.getId();
+                    String urlParameters = "method=Research";
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                     //write post data to URL
                     DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
@@ -146,9 +117,9 @@ public class MesObjets extends Activity {
             try {
                 //alert the user of the status of the connection
                 success = result.getInt(FLAG_SUCCESS);
-                if(success == 0){
+                if (success == 0) {
                     System.out.println("Marchepas");
-                }else{
+                } else {
 
                     JSONArray jArrayID = (result.getJSONArray("id_objet"));
                     JSONArray jArrayID_CAT = (result.getJSONArray("id_categorie"));
@@ -157,8 +128,8 @@ public class MesObjets extends Activity {
                     JSONArray jArrayDESC_OBJET = (result.getJSONArray("description_objet"));
                     JSONArray jArrayprix_OBJET = (result.getJSONArray("prix_objet"));
                     if (jArrayID != null) {
-                        for (int i=0;i<jArrayID.length();i++){
-                            result_List.add(new Objet(Integer.parseInt(jArrayID.get(i).toString()),Double.parseDouble((jArrayprix_OBJET.get(i).toString())),jArrayDESC_OBJET.get(i).toString(),jArrayNOM_OBJET.get(i).toString(),Integer.parseInt(jArrayID_CAT.get(i).toString()),Integer.parseInt(jArrayID_USER.get(i).toString())));
+                        for (int i = 0; i < jArrayID.length(); i++) {
+                            result_List.add(new Objet(Integer.parseInt(jArrayID.get(i).toString()), Double.parseDouble((jArrayprix_OBJET.get(i).toString())), jArrayDESC_OBJET.get(i).toString(), jArrayNOM_OBJET.get(i).toString(), Integer.parseInt(jArrayID_CAT.get(i).toString()), Integer.parseInt(jArrayID_USER.get(i).toString())));
                         }
                     }
 
@@ -166,8 +137,8 @@ public class MesObjets extends Activity {
                     System.out.println(result.getString("nom_objet"));
                     Log.d("DEBUG OBJET AFFICHE", result.toString());
                     // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
-                    RechercheAdapter adapter = new RechercheAdapter(MesObjets.this, result_List);
-                    mes_objets_liste.setAdapter(adapter);
+                    RechercheAdapter adapter = new RechercheAdapter(getActivity(), result_List);
+                    result_listView.setAdapter(adapter);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -181,4 +152,18 @@ public class MesObjets extends Activity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".Pages.Main"
+            android:name=".Pages.Connection"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustResize" >
             <intent-filter>
@@ -32,7 +32,7 @@
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name=".Pages.Resultat_recherche"
+            android:name=".Pages.Main"
             android:label="@string/title_activity_resultat_recherche"
             android:windowSoftInputMode="adjustResize" >
         </activity>
