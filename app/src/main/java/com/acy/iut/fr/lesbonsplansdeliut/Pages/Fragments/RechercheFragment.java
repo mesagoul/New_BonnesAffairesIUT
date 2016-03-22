@@ -40,6 +40,7 @@ public class RechercheFragment extends Fragment {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
+    private int mCurCheckPosition;
 
     //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
     private ListView result_listView;
@@ -179,5 +180,20 @@ public class RechercheFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("curChoice", mCurCheckPosition);
     }
 }
