@@ -19,6 +19,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.AfficheObjet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -54,7 +55,6 @@ public class MesObjetsFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.activity_mes_objets, container, false);
         new LoadPage().execute();
         mes_objets_liste = (ListView)rootView.findViewById(R.id.my_objects_list);
-
 
         String[] mStrings = {""};
 
@@ -145,7 +145,14 @@ public class MesObjetsFragment extends Fragment{
                     JSONArray jArrayprix_OBJET = (result.getJSONArray("prix_objet"));
                     if (jArrayID != null) {
                         for (int i=0;i<jArrayID.length();i++){
-                            result_List.add(new Objet(Integer.parseInt(jArrayID.get(i).toString()),Double.parseDouble((jArrayprix_OBJET.get(i).toString())),jArrayDESC_OBJET.get(i).toString(),jArrayNOM_OBJET.get(i).toString(),Integer.parseInt(jArrayID_CAT.get(i).toString()),Integer.parseInt(jArrayID_USER.get(i).toString())));
+                            result_List.add(new Objet(
+                                                        Integer.parseInt(jArrayID.get(i).toString()),
+                                                        Double.parseDouble((jArrayprix_OBJET.get(i).toString())),
+                                                        jArrayDESC_OBJET.get(i).toString(),
+                                                        jArrayNOM_OBJET.get(i).toString(),
+                                                        Integer.parseInt(jArrayID_CAT.get(i).toString()),
+                                                        Integer.parseInt(jArrayID_USER.get(i).toString()))
+                            );
                         }
                     }
 
