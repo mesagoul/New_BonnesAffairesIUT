@@ -45,6 +45,7 @@ public class MesObjetsFragment extends Fragment{
     private static final String URL = "http://rudyboinnard.esy.es/android/";
     private List<Objet> result_List = new ArrayList<Objet>();
     private ListView mes_objets_liste;
+    Objet selectedObject;
 
     public MesObjetsFragment(){}
 
@@ -68,11 +69,10 @@ public class MesObjetsFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView parentView, View childView,
                                     int position, long id) {
-                Objet ob = (Objet) (mes_objets_liste.getItemAtPosition(position));
-                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
-                Intent MesObjets_to_Affiche_Objet = new Intent(getActivity(), AfficheObjet.class);
-                MesObjets_to_Affiche_Objet.putExtra("Objet", ob);
-                startActivity(MesObjets_to_Affiche_Objet);
+                selectedObject = (Objet) (mes_objets_liste.getItemAtPosition(position));
+                Log.d("DEBUG LIST VIEW CLICK", selectedObject.getNom());
+                ((Main) getActivity()).setObjBundl(selectedObject);
+                ((Main) getActivity()).displayView(4);
             }
 
         });
