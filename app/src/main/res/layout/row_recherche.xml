@@ -8,10 +8,10 @@
 
     <ImageView
         android:id="@+id/photo"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        tools:background="#AAA"
-        />
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/picture"/>
 
     <TextView
         android:id="@+id/titre"

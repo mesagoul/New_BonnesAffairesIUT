@@ -73,7 +73,11 @@ public class AddObject extends Activity {
         prixObjet = (EditText) findViewById(R.id.prix);
         Log.d("DEBUG", Connection.UserLog.getLogin());
     }
-
+    @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

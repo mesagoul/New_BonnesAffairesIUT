@@ -4,24 +4,25 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_inscription">Inscription</string>
-    <string name="title_activity_add_object">AddObject</string>
+    <string name="title_activity_add_object">Ajouter un objet</string>
     <string name="title_activity_resultat_recherche">Les bonnes affaires de l\'IUT</string>
     <string name="drawer_open">Slider Menu Opened</string>
     <string name="drawer_close">Slider Menu Closed</string>
-    <string name="title_activity_mes_objets">MesObjets</string>
-    <string name="title_activity_affiche_objet">AfficheObjets</string>
+    <string name="title_activity_mes_objets">Mon armoire à Objets</string>
+    <string name="title_activity_affiche_objet">Les bonnes affaires de l\'IUT</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
+        <item >Accueil</item>
         <item >Recherche</item>
         <item >Ajouter un objet</item>
         <item >Mon armoire à objets</item>
-
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
+        <item>@drawable/home</item>
         <item>@drawable/search</item>
         <item>@drawable/add</item>
         <item>@drawable/wardrobe</item>

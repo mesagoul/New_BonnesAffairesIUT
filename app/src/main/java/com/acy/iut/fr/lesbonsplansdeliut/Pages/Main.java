@@ -43,6 +43,8 @@ public class Main extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
+    Bundle bundl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +67,13 @@ public class Main extends Activity {
         // adding nav drawer items to array
         // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        // Find People
+        // Find People//search
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        // Photos
+
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
+        // Photos
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));
+
 
 
         // Recycle the typed array
@@ -161,18 +166,21 @@ public class Main extends Activity {
     public void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
+        bundl = null;
+        bundl = new Bundle();
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();
                 break;
             case 1:
-                fragment = new AddObjectFragment();
+                fragment = new RechercheFragment();
                 break;
             case 2:
+                fragment = new AddObjectFragment();
+                break;
+            case 3:
                 fragment = new MesObjetsFragment();
                 break;
-            case 11:
-                fragment = new MesObjetsFragment();
             default:
                 break;
         }
