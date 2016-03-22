@@ -43,6 +43,8 @@ public class Main extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
+    Bundle bundl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +166,8 @@ public class Main extends Activity {
     public void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
+        bundl = null;
+        bundl = new Bundle();
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();

@@ -45,6 +45,7 @@ public class RechercheFragment extends Fragment {
     //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
     private ListView result_listView;
     private List<Objet> result_List = new ArrayList<Objet>();
+    private Objet selectedObject;
 
 
     public RechercheFragment(){}
@@ -66,11 +67,9 @@ public class RechercheFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView parentView, View childView,
                                     int position, long id) {
-                Objet ob = (Objet) (result_listView.getItemAtPosition(position));
-                Log.d("DEBUG LIST VIEW CLICK", ob.getNom());
-                Intent MesObjets_to_Affiche_Objet = new Intent(getActivity(), AfficheObjet.class);
-                MesObjets_to_Affiche_Objet.putExtra("Objet", ob);
-                startActivity(MesObjets_to_Affiche_Objet);
+                selectedObject = (Objet) (result_listView.getItemAtPosition(position));
+                Log.d("DEBUG LIST VIEW CLICK", selectedObject.getNom());
+
             }
 
         });
