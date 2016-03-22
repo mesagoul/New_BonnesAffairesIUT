@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.JSONRequest;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,9 +38,6 @@ import java.util.List;
 public class Inscription extends Activity {
 
     //static fields for ease of access
-    private static final String FLAG_SUCCESS = "success";
-    private static final String FLAG_MESSAGE = "message";
-    private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
 
     //Declare fields
     private EditText nom,prenom, password,mail,tel,login;
@@ -54,7 +53,39 @@ public class Inscription extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new LoadPage().execute();
+        new JSONRequest("method=" + "LoadPageInscription") {
+            protected void onPostExecute(JSONObject result) {
+                int success = 0;
+
+                try {
+                    ArrayList<String>listDept = new ArrayList<String>();
+
+                    JSONArray jArrayDept = (result.getJSONArray("nom_departement"));
+                    JSONArray jArrayid = (result.getJSONArray("id_departement"));
+                    if (jArrayDept != null) {
+                        for (int i=0;i<jArrayDept.length();i++){
+                            listDept.add(jArrayDept.get(i).toString());
+                            Log.d("DEBUG",listDept.get(i));
+
+                        }
+                    }
+                    fillSpinner(spinnerlistDepartement,listDept);
+                    //alert the user of the status of the connection
+                    success = result.getInt(Static.FLAG_SUCCESS);
+                    Log.d("DEBUG",(String)result.getString("nom_departement"));
+                    //testText.setText(result.getString(FLAG_MESSAGE)+"");
+                } catch (JSONException e) {
+                    Log.e("JSON Parser", "Error parsing data " + e.toString());
+                    //e.printStackTrace();
+                }
+                //log the success status
+                if (success == 1) {
+                    Log.d("OK", "OK");
+                } else {
+                    Log.d("Error", "Error");
+                }
+            }
+        }.execute();
         setContentView(R.layout.form_inscription);
 
         //initialize all fields
@@ -85,162 +116,34 @@ public class Inscription extends Activity {
         if (nom.getText().toString().matches("") || prenom.getText().toString().matches("")|| mail.getText().toString().matches("") || tel.getText().toString().matches("")||  password.getText().toString().matches("") ||  login.getText().toString().matches("")) {
             Toast.makeText(this, "Remplir tous les champs pour continuer", Toast.LENGTH_SHORT).show();
         }else {
-            new AddUser().execute();
-        }
+            Utilisateur u = new Utilisateur((int)(spinnerlistDepartement.getSelectedItemId()+1),nom.getText().toString(),prenom.getText().toString(),mail.getText().toString(),tel.getText().toString(),password.getText().toString(),login.getText().toString());
+            new JSONRequest("nom=" + u.getNom() + "&&prenom=" + u.getPrenom() + "&&departement=" + u.getId_departement()+ "&&mail=" + u.getMail()+ "&&telephone=" + u.getTel()+ "&&password=" + u.getMotdepasse()+ "&&login=" + u.getLogin()+ "&&method=" + "insertUser") {
+                protected void onPostExecute(JSONObject result) {
+                    int success = 0;
 
-    }
-
-    //convert an inputstream to a string
-    public String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
-
-    //async call to the php script
-    class AddUser extends AsyncTask<Utilisateur, String, JSONObject> {
-
-        private Utilisateur u = new Utilisateur((int)(spinnerlistDepartement.getSelectedItemId()+1),nom.getText().toString(),prenom.getText().toString(),mail.getText().toString(),tel.getText().toString(),password.getText().toString(),login.getText().toString());
-
-        //display loading and status
-        protected void onPreExecute() {
-            //testText.setText("Connecting...")
-        }
-
-        //Get JSON data from the URL
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected JSONObject doInBackground(Utilisateur... args) {
-            JSONObject json = null;
-            try {
-                Log.d("request!", "starting");
-                URL url = null;
-                HttpURLConnection connection = null;
-                try {
-                    //initialize connection
-                    url = new URL(LOGIN_URL);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    String urlParameters = "nom=" + u.getNom() + "&&prenom=" + u.getPrenom() + "&&departement=" + u.getId_departement()+ "&&mail=" + u.getMail()+ "&&telephone=" + u.getTel()+ "&&password=" + u.getMotdepasse()+ "&&login=" + u.getLogin()+ "&&method=" + "insertUser";
-                    byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    //write post data to URL
-                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-                    wr.write(postData);
-                    //connect and get data
-                    connection.connect();
-                    InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //parse returned data
-        protected void onPostExecute(JSONObject result) {
-            int success = 0;
-
-            try {
-                //alert the user of the status of the connection
-                success = result.getInt(FLAG_SUCCESS);
-                Toast.makeText(Inscription.this, (String)result.getString(FLAG_MESSAGE),
-                        Toast.LENGTH_LONG).show();
-                Intent inscription_to_main = new Intent(Inscription.this, Connection.class);
-                startActivity(inscription_to_main);
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-                //e.printStackTrace();
-            }
-            //log the success status
-            if (success == 1) {
-                Log.d("OK", "OK");
-            } else {
-                Log.d("Error", "Error");
-            }
-        }
-    }
-
-    //async call to the php script
-    class LoadPage extends AsyncTask<String, String, JSONObject> {
-
-
-        public  ArrayList<String>listDept = new ArrayList<String>();
-
-        //display loading and status
-        protected void onPreExecute() {
-        }
-
-        //Get JSON data from the URL
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            JSONObject json = null;
-            try {
-                Log.d("request!", "starting");
-                URL url = null;
-                HttpURLConnection connection = null;
-                try {
-                    //initialize connection
-                    url = new URL(LOGIN_URL);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    String urlParameters = "method=" + "LoadPageInscription";
-                    byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    //write post data to URL
-                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-                    wr.write(postData);
-                    //connect and get data
-                    connection.connect();
-                    InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //parse returned data
-        protected void onPostExecute(JSONObject result) {
-            int success = 0;
-
-            try {
-
-
-                JSONArray jArrayDept = (result.getJSONArray("nom_departement"));
-                JSONArray jArrayid = (result.getJSONArray("id_departement"));
-                if (jArrayDept != null) {
-                    for (int i=0;i<jArrayDept.length();i++){
-                        listDept.add(jArrayDept.get(i).toString());
-                        Log.d("DEBUG",listDept.get(i));
-
+                    try {
+                        //alert the user of the status of the connection
+                        success = result.getInt(Static.FLAG_SUCCESS);
+                        Toast.makeText(Inscription.this, (String)result.getString(Static.FLAG_MESSAGE),
+                                Toast.LENGTH_LONG).show();
+                        Intent inscription_to_main = new Intent(Inscription.this, Connection.class);
+                        startActivity(inscription_to_main);
+                        //testText.setText(result.getString(FLAG_MESSAGE)+"");
+                    } catch (JSONException e) {
+                        Log.e("JSON Parser", "Error parsing data " + e.toString());
+                        //e.printStackTrace();
+                    }
+                    //log the success status
+                    if (success == 1) {
+                        Log.d("OK", "OK");
+                    } else {
+                        Log.d("Error", "Error");
                     }
                 }
-                fillSpinner(spinnerlistDepartement,listDept);
-                //alert the user of the status of the connection
-                success = result.getInt(FLAG_SUCCESS);
-                 Log.d("DEBUG",(String)result.getString("nom_departement"));
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-                //e.printStackTrace();
-            }
-            //log the success status
-            if (success == 1) {
-                Log.d("OK", "OK");
-            } else {
-                Log.d("Error", "Error");
-            }
+            }.execute();
         }
-    }
 
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

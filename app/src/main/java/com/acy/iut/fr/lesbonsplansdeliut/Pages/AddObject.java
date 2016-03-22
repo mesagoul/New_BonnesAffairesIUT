@@ -25,6 +25,8 @@ import android.widget.Toast;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.JSONRequest;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,9 +45,6 @@ import java.util.List;
 
 
 public class AddObject extends Activity {
-    private static final String FLAG_SUCCESS = "success";
-    private static final String FLAG_MESSAGE = "message";
-    private static final String URL = "http://rudyboinnard.esy.es/android/";
     private ArrayList<String> listCategories = new ArrayList<String>();
     private Spinner spinnerCategories;
     private EditText titreObjet, descriptionObjet, prixObjet;
@@ -61,7 +60,35 @@ public class AddObject extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_object);
-        new LoadPage().execute();
+        new JSONRequest("method=LoadPageAddObject") {
+            protected void onPostExecute(JSONObject result) {
+                int success = 0;
+
+                try {
+                    JSONArray jArrayDept = (result.getJSONArray("nom_categorie"));
+                    JSONArray jArrayid = (result.getJSONArray("id_categorie"));
+                    if (jArrayDept != null) {
+                        for (int i=0;i<jArrayDept.length();i++){
+                            listCategories.add(jArrayDept.get(i).toString());
+                            Log.d("DEBUG",listCategories.get(i));
+                        }
+                    }
+                    fillSpinner(spinnerCategories,listCategories);
+                    //alert the user of the status of the connection
+                    success = result.getInt(Static.FLAG_SUCCESS);
+                    //testText.setText(result.getString(FLAG_MESSAGE)+"");
+                } catch (JSONException e) {
+                    Log.e("JSON Parser", "Error parsing data " + e.toString());
+                    //e.printStackTrace();
+                }
+                //log the success status
+                if (success == 1) {
+                    Log.d("OK", "OK");
+                } else {
+                    Log.d("Error", "Error");
+                }
+            }
+        }.execute();
 
         titreObjet = (EditText) findViewById(R.id.titreObjet);
         spinnerCategories = (Spinner) findViewById(R.id.spinnerCategories);
@@ -101,7 +128,28 @@ public class AddObject extends Activity {
     }
     public void ClickAddObject(View v){
         Log.d("DEBUG OBJECT","Clicki on  Add OBject");
-        new AddObjet().execute();
+        Objet ob = new Objet(Connection.UserLog.getId(),(int)(spinnerCategories.getSelectedItemId()+1),titreObjet.getText().toString(), descriptionObjet.getText().toString(), Double.parseDouble(prixObjet.getText().toString()));
+        new JSONRequest("nomObjet=" + ob.getNom() + "&&id_user="+ob.getId_utilisateur()+"&&descriptionObjet=" + ob.getDescription() + "&&prixObjet=" + ob.getPrix() + "&&idCategorieObjet=" + ob.getId_categorie() + "&&method=" + "AddObjet") {
+            protected void onPostExecute(JSONObject result) {
+                int success = 0;
+
+                try {
+                    Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
+                    Intent AddObject_to_MesObjets = new Intent(AddObject.this, MesObjets.class);
+                    startActivity(AddObject_to_MesObjets);
+
+                } catch (JSONException e) {
+                    Log.e("JSON Parser", "Error parsing data " + e.toString());
+                    //e.printStackTrace();
+                }
+                //log the success status
+                if (success == 1) {
+                    Log.d("OK", "OK");
+                } else {
+                    Log.d("Error", "Error");
+                }
+            }
+        }.execute();
     }
 
     public void ClickAddPhotoBtn(View v){
@@ -169,79 +217,6 @@ public class AddObject extends Activity {
         }
     }
 
-
-    class LoadPage extends AsyncTask<String, String, JSONObject> {
-
-        //display loading and status
-        protected void onPreExecute() {
-        }
-
-        //Get JSON data from the URL
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            JSONObject json = null;
-            try {
-                Log.d("request", "starting GetCategories");
-                URL url = null;
-                HttpURLConnection connection = null;
-                try {
-                    //initialize connection
-                    url = new URL(URL);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    String urlParameters = "method=LoadPageAddObject";
-                    byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    //write post data to URL
-                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-                    wr.write(postData);
-                    //connect and get data
-                    connection.connect();
-                    InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //parse returned data
-        protected void onPostExecute(JSONObject result) {
-            int success = 0;
-
-            try {
-
-
-                JSONArray jArrayDept = (result.getJSONArray("nom_categorie"));
-                JSONArray jArrayid = (result.getJSONArray("id_categorie"));
-                if (jArrayDept != null) {
-                    for (int i=0;i<jArrayDept.length();i++){
-                        listCategories.add(jArrayDept.get(i).toString());
-                        Log.d("DEBUG",listCategories.get(i));
-
-                    }
-                }
-                fillSpinner(spinnerCategories,listCategories);
-                //alert the user of the status of the connection
-                success = result.getInt(FLAG_SUCCESS);
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-                //e.printStackTrace();
-            }
-            //log the success status
-            if (success == 1) {
-                Log.d("OK", "OK");
-            } else {
-                Log.d("Error", "Error");
-            }
-        }
-    }
-
     public String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
@@ -270,29 +245,7 @@ public class AddObject extends Activity {
         return encodedImage;
     }
 
-
-
-    class AddObjet extends AsyncTask<Utilisateur, String, JSONObject> {
-        private Objet ob = new Objet(Connection.UserLog.getId(),(int)(spinnerCategories.getSelectedItemId()+1),titreObjet.getText().toString(), descriptionObjet.getText().toString(), Double.parseDouble(prixObjet.getText().toString()));
-        //display loading and status
-        protected void onPreExecute() {
-            Log.d("AddObjet", "Connexion add object start");
-        }
-        //Get JSON data from the URL
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected JSONObject doInBackground(Utilisateur... args) {
-            JSONObject json = null;
-            try {
-                Log.d("request!", "starting");
-                URL url = null;
-                HttpURLConnection connection = null;
-                try {
-                    //initialize connection
-                    url = new URL(URL);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    if(photo1ok){
+                    /*if(photo1ok){
                         listImageObjet.add(getStringImage(photo1_bitmap));
                         photo1ok = false;
                     }
@@ -305,46 +258,6 @@ public class AddObject extends Activity {
                     {
                         listImageObjet.add(getStringImage(photo3_bitmap));
                         photo1ok = false;
-                    }
+                    }*/
                     //ob.setUrl_photo1(listImageObjet);
-                    String urlParameters = "nomObjet=" + ob.getNom() + "&&id_user="+ob.getId_utilisateur()+"&&descriptionObjet=" + ob.getDescription() + "&&prixObjet=" + ob.getPrix() + "&&idCategorieObjet=" + ob.getId_categorie() + "&&method=" + "AddObjet";
-                    byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    //write post data to URL
-                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-                    wr.write(postData);
-                    //connect and get data
-                    connection.connect();
-                    InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //parse returned data
-        protected void onPostExecute(JSONObject result) {
-            int success = 0;
-
-            try {
-                Toast.makeText(AddObject.this,result.getString("message"),Toast.LENGTH_SHORT).show();
-                Intent AddObject_to_MesObjets = new Intent(AddObject.this, MesObjets.class);
-                startActivity(AddObject_to_MesObjets);
-
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-                //e.printStackTrace();
-            }
-            //log the success status
-            if (success == 1) {
-                Log.d("OK", "OK");
-            } else {
-                Log.d("Error", "Error");
-            }
-        }
-    }
 }
