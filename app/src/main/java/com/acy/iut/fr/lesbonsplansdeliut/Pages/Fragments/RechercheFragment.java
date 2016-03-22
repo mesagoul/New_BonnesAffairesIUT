@@ -19,6 +19,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.AfficheObjet;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 
 import org.json.JSONArray;
@@ -69,7 +70,8 @@ public class RechercheFragment extends Fragment {
                                     int position, long id) {
                 selectedObject = (Objet) (result_listView.getItemAtPosition(position));
                 Log.d("DEBUG LIST VIEW CLICK", selectedObject.getNom());
-
+                ((Main) getActivity()).setObjBundl(selectedObject);
+                ((Main) getActivity()).displayView(4);
             }
 
         });

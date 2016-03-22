@@ -17,7 +17,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.NavDrawerListAdapter;
+import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.AddObjectFragment;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.AfficheObjetFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.MesObjetsFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Model.NavDrawerItem;
@@ -43,7 +45,12 @@ public class Main extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
-    Bundle bundl;
+    Bundle bundl = new Bundle();
+
+    public void setObjBundl(Objet obg){
+        bundl.clear();
+        bundl.putSerializable("objet", obg);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,8 +173,6 @@ public class Main extends Activity {
     public void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
-        bundl = null;
-        bundl = new Bundle();
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();
@@ -181,11 +186,14 @@ public class Main extends Activity {
             case 3:
                 fragment = new MesObjetsFragment();
                 break;
+            case 4:
+                fragment = new AfficheObjetFragment();
             default:
                 break;
         }
 
         if (fragment != null) {
+            fragment.setArguments(bundl);
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();

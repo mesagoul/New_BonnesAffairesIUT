@@ -49,6 +49,9 @@ public class AfficheObjetFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_affiche_objet, container, false);
+        new LoadPage().execute();
+
+        ob = (Objet) getArguments().getSerializable("objet");
 
         nom_objet = (TextView)(rootView.findViewById(R.id.nom_objet));
         prix_objet = (TextView)(rootView.findViewById(R.id.prix_objet));

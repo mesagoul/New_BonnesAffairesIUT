@@ -17,6 +17,7 @@
         <item >Recherche</item>
         <item >Ajouter un objet</item>
         <item >Mon armoire à objets</item>
+        <item >Objet</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
