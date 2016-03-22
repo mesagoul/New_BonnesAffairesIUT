@@ -151,6 +151,7 @@ public class AfficheObjet extends Activity {
             int success = 0;
             try {
                 //alert the user of the status of the connection
+                Log.d("result",result + "");
                 success = result.getInt(FLAG_SUCCESS);
                 if(success == 0){
                     System.out.println("Marchepas");

@@ -158,7 +158,7 @@ public class Main extends Activity {
     /**
      * Diplaying fragment view for selected nav drawer list item
      * */
-    private void displayView(int position) {
+    public void displayView(int position) {
         // update the main content by replacing fragments
         Fragment fragment = null;
         switch (position) {
@@ -171,6 +171,8 @@ public class Main extends Activity {
             case 2:
                 fragment = new MesObjetsFragment();
                 break;
+            case 11:
+                fragment = new MesObjetsFragment();
             default:
                 break;
         }
