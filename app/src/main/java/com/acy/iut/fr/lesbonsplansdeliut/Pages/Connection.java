@@ -1,11 +1,15 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +24,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 import com.acy.iut.fr.lesbonsplansdeliut.Util.JSONRequest;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,10 +50,17 @@ public class Connection extends Activity {
     private TextView status;
     private ProgressBar progress;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_request_demo);
+        ActionBar actionBar = getActionBar();
+        Static.ActionBarColor(actionBar, "#99e6ff");
+        Static.ActionBarTitleColor(actionBar, "#666", "Les bonnes affaires de l'IUT");
+
+
+
         //initialize all fields
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
