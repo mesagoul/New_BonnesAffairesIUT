@@ -59,6 +59,13 @@ public class AfficheObjetFragment extends Fragment {
         nom_personne = (TextView)(rootView.findViewById(R.id.nom_personne));
         mail_personne = (TextView)(rootView.findViewById(R.id.mail_personne));
         supprimer = (Button)(rootView.findViewById(R.id.supprimer));
+        supprimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DeleteObjet().execute();
+                ((Main) getActivity()).displayView(0);
+            }
+        });
 
 
 
@@ -78,10 +85,6 @@ public class AfficheObjetFragment extends Fragment {
         return rootView;
     }
 
-    public void DeleteObjet(View v)
-    {
-        new DeleteObjet().execute();
-    }
     //async call to the php script
     class LoadPage extends AsyncTask<Credential, String, JSONObject> {
 

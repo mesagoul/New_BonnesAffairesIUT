@@ -66,7 +66,7 @@ public class Connection extends Activity {
         password = (EditText)findViewById(R.id.password);
         status = (TextView)findViewById(R.id.status);
         progress = (ProgressBar)findViewById(R.id.progressBar);
-        progress.setVisibility(View.INVISIBLE);
+       progress.setVisibility(View.INVISIBLE);
         ImageView imageView = (ImageView) findViewById(R.id.logo);
         imageView.setImageResource(R.drawable.logo);
     }
@@ -84,6 +84,7 @@ public class Connection extends Activity {
         if(v.getId() != R.id.submit) {
             return;
         }
+        progress.setVisibility(View.VISIBLE);
         Credential c = new Credential(username.getText().toString(), password.getText().toString());
         new JSONRequest("username=" + c.getUsername() + "&&password=" + c.getPassword()+"&&method="+"LogUser") {
             protected void onPostExecute(JSONObject result) {
@@ -110,8 +111,9 @@ public class Connection extends Activity {
                         Toast.makeText(Connection.this, result.getString("message"), Toast.LENGTH_SHORT).show();
                         Intent main_to_resultatObjet = new Intent(Connection.this, Main.class);
                         startActivity(main_to_resultatObjet);
+                        progress.setVisibility(View.INVISIBLE);
                     }
-                    progress.setVisibility(View.GONE);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

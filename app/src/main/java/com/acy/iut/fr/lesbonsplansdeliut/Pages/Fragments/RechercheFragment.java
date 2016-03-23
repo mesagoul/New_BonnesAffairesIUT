@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
@@ -41,13 +42,15 @@ public class RechercheFragment extends Fragment {
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
+    private ProgressBar progress;
     private int mCurCheckPosition;
 
     //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
-    private ListView result_listView;
+    public ListView result_listView;
     private List<Objet> result_List = new ArrayList<Objet>();
     private Objet selectedObject;
 
+    private String url_request;
 
     public RechercheFragment(){}
 
@@ -60,8 +63,14 @@ public class RechercheFragment extends Fragment {
 
         //Initialisation de la ListView des resultat de la recherche
         result_listView = (ListView) rootView.findViewById(R.id.result_listView);
+        progress = (ProgressBar)rootView.findViewById(R.id.tamerprogress);
+        url_request = (String) getArguments().getSerializable("url");
+        if(url_request == null) {
+            url_request = "method=Research";
+        }
 
         new Research().execute();
+
 
         result_listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -91,7 +100,7 @@ public class RechercheFragment extends Fragment {
 
         //display loading and status
         protected void onPreExecute() {
-
+            progress.setVisibility(View.VISIBLE);
         }
 
         //Get JSON data from the URL
@@ -108,7 +117,7 @@ public class RechercheFragment extends Fragment {
                     url = new URL(LOGIN_URL);
                     connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
-                    String urlParameters = "method=Research";
+                    String urlParameters = url_request;
                     byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
                     //write post data to URL
                     DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
@@ -129,6 +138,7 @@ public class RechercheFragment extends Fragment {
 
         //parse returned data
         protected void onPostExecute(JSONObject result) {
+
             int success = 0;
             try {
                 //alert the user of the status of the connection
@@ -136,6 +146,7 @@ public class RechercheFragment extends Fragment {
                 if (success == 0) {
                     System.out.println("Marchepas");
                 } else {
+
 
                     JSONArray jArrayID = (result.getJSONArray("id_objet"));
                     JSONArray jArrayID_CAT = (result.getJSONArray("id_categorie"));
@@ -154,6 +165,7 @@ public class RechercheFragment extends Fragment {
                     Log.d("DEBUG OBJET AFFICHE", result.toString());
                     // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
                     RechercheAdapter adapter = new RechercheAdapter(getActivity(), result_List);
+                    progress.setVisibility(View.INVISIBLE);
                     result_listView.setAdapter(adapter);
                 }
             } catch (JSONException e) {

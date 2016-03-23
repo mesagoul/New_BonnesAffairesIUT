@@ -76,8 +76,7 @@
             android:id="@+id/supprimer"
             android:layout_gravity="right"
             android:enabled="true"
-            android:visibility="visible"
-            android:onClick="DeleteObjet" />
+            android:visibility="visible" />
 
     </LinearLayout>
 </ScrollView>

@@ -21,9 +21,11 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.AddObjectFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.AfficheObjetFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.MesObjetsFragment;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheByFiltersFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Model.NavDrawerItem;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import java.util.ArrayList;
 
@@ -47,15 +49,23 @@ public class Main extends Activity {
 
     Bundle bundl = new Bundle();
 
+
     public void setObjBundl(Objet obg){
         bundl.clear();
         bundl.putSerializable("objet", obg);
     }
+    public void setUrlBundl(String url){
+        bundl.clear();
+        bundl.putSerializable("url",url);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Static.listCategories = Static.fillCategories();
 
         mTitle = mDrawerTitle = getTitle();
 
@@ -178,7 +188,7 @@ public class Main extends Activity {
                 fragment = new RechercheFragment();
                 break;
             case 1:
-                fragment = new RechercheFragment();
+                fragment = new RechercheByFiltersFragment();
                 break;
             case 2:
                 fragment = new AddObjectFragment();
@@ -197,6 +207,8 @@ public class Main extends Activity {
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_container, fragment).commit();
+
+
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);

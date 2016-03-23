@@ -60,35 +60,8 @@ public class AddObject extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_object);
-        new JSONRequest("method=LoadPageAddObject") {
-            protected void onPostExecute(JSONObject result) {
-                int success = 0;
 
-                try {
-                    JSONArray jArrayDept = (result.getJSONArray("nom_categorie"));
-                    JSONArray jArrayid = (result.getJSONArray("id_categorie"));
-                    if (jArrayDept != null) {
-                        for (int i=0;i<jArrayDept.length();i++){
-                            listCategories.add(jArrayDept.get(i).toString());
-                            Log.d("DEBUG",listCategories.get(i));
-                        }
-                    }
-                    fillSpinner(spinnerCategories,listCategories);
-                    //alert the user of the status of the connection
-                    success = result.getInt(Static.FLAG_SUCCESS);
-                    //testText.setText(result.getString(FLAG_MESSAGE)+"");
-                } catch (JSONException e) {
-                    Log.e("JSON Parser", "Error parsing data " + e.toString());
-                    //e.printStackTrace();
-                }
-                //log the success status
-                if (success == 1) {
-                    Log.d("OK", "OK");
-                } else {
-                    Log.d("Error", "Error");
-                }
-            }
-        }.execute();
+        fillSpinner(spinnerCategories, Static.listCategories);
 
         titreObjet = (EditText) findViewById(R.id.titreObjet);
         spinnerCategories = (Spinner) findViewById(R.id.spinnerCategories);

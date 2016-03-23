@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -27,8 +28,10 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.AddObject;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
+import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.MesObjets;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +63,7 @@ public class AddObjectFragment extends Fragment{
     private boolean photo1ok = false,photo2ok = false,photo3ok = false;
     private Uri filepath;
     private Bitmap photo1_bitmap = null,photo2_bitmap = null,photo3_bitmap= null,photoX_bitmap;
+    private Button btnAddObject, btn_photo1,btn_photo2,btn_photo3;
 
     private View rootView;
 
@@ -68,11 +72,7 @@ public class AddObjectFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.activity_add_object, container, false);
-
-        new LoadPage().execute();
-
         titreObjet = (EditText) rootView.findViewById(R.id.titreObjet);
         spinnerCategories = (Spinner) rootView.findViewById(R.id.spinnerCategories);
         photo1 = (ImageView) rootView.findViewById(R.id.photo1);
@@ -81,18 +81,46 @@ public class AddObjectFragment extends Fragment{
         titreObjet = (EditText) rootView.findViewById(R.id.titreObjet);
         descriptionObjet = (EditText) rootView.findViewById(R.id.descriptionObjet);
         prixObjet = (EditText) rootView.findViewById(R.id.prix);
+        btnAddObject = (Button)rootView.findViewById(R.id.button3);
+        btnAddObject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("DEBUG OBJECT", "Clicki on  Add OBject");
+                new AddObjet().execute();
+            }
+        });
+        btn_photo1 = (Button)(rootView.findViewById(R.id.btnAddPhoto));
+        btn_photo2 = (Button)(rootView.findViewById(R.id.btnAddPhoto2));
+        btn_photo3 = (Button)(rootView.findViewById(R.id.btnAddPhoto3));
+        btn_photo1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddClick(v);
+            }
+        });
+        btn_photo2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddClick(v);
+            }
+        });
+        btn_photo3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AddClick(v);
+            }
+        });
+
+
+        fillSpinner(spinnerCategories, Static.listCategories);
         Log.d("DEBUG", Connection.UserLog.getLogin());
 
 
         return rootView;
     }
 
-    public void ClickAddObject(View v){
-        Log.d("DEBUG OBJECT","Clicki on  Add OBject");
-        new AddObjet().execute();
-    }
 
-    public void ClickAddPhotoBtn(View v){
+    public void AddClick(View v){
         if(v.getId() == R.id.btnAddPhoto){
             imageX = (ImageView)rootView.findViewById(R.id.photo1);
         }else if (v.getId() == R.id.btnAddPhoto2){
@@ -158,82 +186,6 @@ public class AddObjectFragment extends Fragment{
     }
 
 
-    class LoadPage extends AsyncTask<String, String, JSONObject> {
-
-        //display loading and status
-        protected void onPreExecute() {
-        }
-
-        //Get JSON data from the URL
-        @TargetApi(Build.VERSION_CODES.KITKAT)
-        @Override
-        protected JSONObject doInBackground(String... args) {
-            JSONObject json = null;
-            try {
-                Log.d("request", "starting GetCategories");
-                java.net.URL url = null;
-                HttpURLConnection connection = null;
-                try {
-                    //initialize connection
-                    url = new URL(URL);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("POST");
-                    String urlParameters = "method=LoadPageAddObject";
-                    byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                    //write post data to URL
-                    DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-                    wr.write(postData);
-                    //connect and get data
-                    connection.connect();
-                    InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        //parse returned data
-        protected void onPostExecute(JSONObject result) {
-            int success = 0;
-
-            try {
-
-
-                JSONArray jArrayDept = (result.getJSONArray("nom_categorie"));
-                JSONArray jArrayid = (result.getJSONArray("id_categorie"));
-                if (jArrayDept != null) {
-                    for (int i=0;i<jArrayDept.length();i++){
-                        listCategories.add(jArrayDept.get(i).toString());
-                        Log.d("DEBUG",listCategories.get(i));
-
-                    }
-                }
-                fillSpinner(spinnerCategories,listCategories);
-                //alert the user of the status of the connection
-                success = result.getInt(FLAG_SUCCESS);
-                //testText.setText(result.getString(FLAG_MESSAGE)+"");
-            } catch (JSONException e) {
-                Log.e("JSON Parser", "Error parsing data " + e.toString());
-                //e.printStackTrace();
-            }
-            //log the success status
-            if (success == 1) {
-                Log.d("OK", "OK");
-            } else {
-                Log.d("Error", "Error");
-            }
-        }
-    }
-
-    public String convertStreamToString(java.io.InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
-    }
 
     public void fillSpinner(Spinner spinner, List<String> list) {
         // Creating adapter for spinner
@@ -303,7 +255,7 @@ public class AddObjectFragment extends Fragment{
                     //connect and get data
                     connection.connect();
                     InputStream in = new BufferedInputStream(connection.getInputStream());
-                    json = new JSONObject(convertStreamToString(in));
+                    json = new JSONObject(Static.convertStreamToString(in));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -320,8 +272,7 @@ public class AddObjectFragment extends Fragment{
 
             try {
                 Toast.makeText(getActivity(), result.getString("message"), Toast.LENGTH_SHORT).show();
-                Intent AddObject_to_MesObjets = new Intent(getActivity(), MesObjets.class);
-                startActivity(AddObject_to_MesObjets);
+                ((Main) getActivity()).displayView(3);
 
             } catch (JSONException e) {
                 Log.e("JSON Parser", "Error parsing data " + e.toString());
