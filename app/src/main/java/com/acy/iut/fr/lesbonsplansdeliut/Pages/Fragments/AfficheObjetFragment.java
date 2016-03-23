@@ -2,6 +2,7 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -63,7 +64,6 @@ public class AfficheObjetFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 new DeleteObjet().execute();
-                ((Main) getActivity()).displayView(0);
             }
         });
 
@@ -209,6 +209,8 @@ public class AfficheObjetFragment extends Fragment {
                 //alert the user of the status of the connection
                 success = result.getInt(FLAG_SUCCESS);
                 Toast.makeText(getActivity(), result.getString("message"), Toast.LENGTH_SHORT).show();
+                ((Main) getActivity()).displayView(0);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

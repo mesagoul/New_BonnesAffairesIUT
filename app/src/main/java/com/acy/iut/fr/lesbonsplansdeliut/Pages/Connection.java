@@ -56,8 +56,8 @@ public class Connection extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_http_request_demo);
         ActionBar actionBar = getActionBar();
-        Static.ActionBarColor(actionBar, "#99e6ff");
-        Static.ActionBarTitleColor(actionBar, "#666", "Les bonnes affaires de l'IUT");
+        Static.ActionBarColor(actionBar, "#2196F3");
+
 
 
 

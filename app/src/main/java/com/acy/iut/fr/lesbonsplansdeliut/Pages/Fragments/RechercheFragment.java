@@ -1,6 +1,7 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.AfficheObjet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +47,7 @@ public class RechercheFragment extends Fragment {
     private ProgressBar progress;
     private int mCurCheckPosition;
 
-    //Déclaration des valeurs necessaire à la création de la listView des resultats de la recherche
+    //Declaration des valeurs necessaire a la creation de la listView des resultats de la recherche
     public ListView result_listView;
     private List<Objet> result_List = new ArrayList<Objet>();
     private Objet selectedObject;
@@ -62,6 +64,7 @@ public class RechercheFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recherche, container, false);
 
         //Initialisation de la ListView des resultat de la recherche
+
         result_listView = (ListView) rootView.findViewById(R.id.result_listView);
         progress = (ProgressBar)rootView.findViewById(R.id.tamerprogress);
         url_request = (String) getArguments().getSerializable("url");

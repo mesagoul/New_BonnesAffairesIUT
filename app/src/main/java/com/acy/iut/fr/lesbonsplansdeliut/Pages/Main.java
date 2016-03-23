@@ -1,6 +1,7 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -65,6 +66,8 @@ public class Main extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ActionBar actionBar = getActionBar();
+        Static.ActionBarColor(actionBar, "#2196F3");
         Static.listCategories = Static.fillCategories();
 
         mTitle = mDrawerTitle = getTitle();
@@ -245,5 +248,6 @@ public class Main extends Activity {
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
 
 }
