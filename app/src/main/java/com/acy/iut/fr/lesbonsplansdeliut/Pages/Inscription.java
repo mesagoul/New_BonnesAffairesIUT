@@ -1,8 +1,10 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +12,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -52,6 +56,16 @@ public class Inscription extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ActionBar actionBar = getActionBar();
+        Static.ActionBarColor(actionBar, "#2196F3");
+
+// Action BAr on blue
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor("#1976D2"));
+        }
+
         super.onCreate(savedInstanceState);
         new JSONRequest("method=" + "LoadPageInscription") {
             protected void onPostExecute(JSONObject result) {
