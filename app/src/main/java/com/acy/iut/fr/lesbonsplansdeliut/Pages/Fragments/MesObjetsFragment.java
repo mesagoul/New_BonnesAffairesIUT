@@ -2,7 +2,6 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,11 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
-import com.acy.iut.fr.lesbonsplansdeliut.Pages.AfficheObjet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
@@ -46,6 +45,7 @@ public class MesObjetsFragment extends Fragment{
     private List<Objet> result_List = new ArrayList<Objet>();
     private ListView mes_objets_liste;
     Objet selectedObject;
+    ProgressBar maProgressBar;
 
     public MesObjetsFragment(){}
 
@@ -54,8 +54,10 @@ public class MesObjetsFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_mes_objets, container, false);
+        maProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBarMesObjets);
         new LoadPage().execute();
         mes_objets_liste = (ListView)rootView.findViewById(R.id.my_objects_list);
+
 
         String[] mStrings = {""};
 
@@ -85,7 +87,7 @@ public class MesObjetsFragment extends Fragment{
 
         //display loading and status
         protected void onPreExecute() {
-
+            maProgressBar.setVisibility(View.VISIBLE);
         }
 
         //convert an inputstream to a string
@@ -161,6 +163,7 @@ public class MesObjetsFragment extends Fragment{
                     Log.d("DEBUG OBJET AFFICHE", result.toString());
                     // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
                     RechercheAdapter adapter = new RechercheAdapter(getActivity(), result_List);
+                    maProgressBar.setVisibility(View.INVISIBLE);
                     mes_objets_liste.setAdapter(adapter);
                 }
             } catch (JSONException e) {

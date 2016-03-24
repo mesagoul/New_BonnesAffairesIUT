@@ -6,5 +6,6 @@
     <color name="counter_text_bg">#AAAAAA</color>
     <color name="list_item_title">#ffffff</color>
     <color name="counter_text_color">#ffffff</color>
+    <color name="color_scrollview">#2196F3</color>
 
 </resources>

@@ -26,14 +26,11 @@ import android.widget.Toast;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Utilisateur;
-import com.acy.iut.fr.lesbonsplansdeliut.Pages.AddObject;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
-import com.acy.iut.fr.lesbonsplansdeliut.Pages.MesObjets;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 

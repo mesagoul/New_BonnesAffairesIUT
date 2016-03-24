@@ -1,15 +1,9 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,13 +22,6 @@ import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
 
 public class Connection extends Activity {
@@ -65,7 +52,7 @@ public class Connection extends Activity {
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
         status = (TextView)findViewById(R.id.status);
-        progress = (ProgressBar)findViewById(R.id.progressBar);
+        progress = (ProgressBar)findViewById(R.id.progressBarMesObjets);
        progress.setVisibility(View.INVISIBLE);
         ImageView imageView = (ImageView) findViewById(R.id.logo);
         imageView.setImageResource(R.drawable.logo);
