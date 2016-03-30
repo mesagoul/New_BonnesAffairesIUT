@@ -2,6 +2,7 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,7 +32,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class AfficheObjetFragment extends Fragment {
+public class AfficheObjetFragment extends UtilFragment {
 
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
@@ -218,6 +220,20 @@ public class AfficheObjetFragment extends Fragment {
                 Log.d("Error", "Error");
             }
         }
+    }
+
+    @Override
+    public Boolean backAction(){
+        Fragment fragment = getActivity().getFragmentManager().findFragmentByTag("recherche");
+
+        FragmentManager.BackStackEntry backEntry=getFragmentManager().getBackStackEntryAt(getActivity().getFragmentManager().getBackStackEntryCount()-2);
+        String lastFragmentName = backEntry.getName();
+        if (lastFragmentName == "recherche"){
+            ((Main)getActivity()).displayView(0);
+        }else{
+            ((Main)getActivity()).displayView(3);
+        }
+        return true;
     }
 
 

@@ -30,6 +30,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +46,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddObjectFragment extends Fragment{
+public class AddObjectFragment extends UtilFragment {
 
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";
@@ -283,5 +284,6 @@ public class AddObjectFragment extends Fragment{
             }
         }
     }
+
 
 }

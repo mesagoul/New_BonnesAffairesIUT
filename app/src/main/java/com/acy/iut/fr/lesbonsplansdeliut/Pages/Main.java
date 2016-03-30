@@ -3,8 +3,10 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -31,6 +33,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments.RechercheFragment;
 import com.acy.iut.fr.lesbonsplansdeliut.Model.NavDrawerItem;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import java.util.ArrayList;
 
@@ -52,16 +55,21 @@ public class Main extends Activity {
     private ArrayList<NavDrawerItem> navDrawerItems;
     private NavDrawerListAdapter adapter;
 
-    Bundle bundl = new Bundle();
+    private UtilFragment fragment;
+    private String TAG_FRAGMENT;
+
+
+    Bundle objBundl = new Bundle();
+    Bundle urlBundl = new Bundle();
 
 
     public void setObjBundl(Objet obg){
-        bundl.clear();
-        bundl.putSerializable("objet", obg);
+        objBundl.clear();
+        objBundl.putSerializable("objet", obg);
     }
     public void setUrlBundl(String url){
-        bundl.clear();
-        bundl.putSerializable("url",url);
+        urlBundl.clear();
+        urlBundl.putSerializable("url",url);
     }
 
 
@@ -156,6 +164,7 @@ public class Main extends Activity {
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
             // display view for selected nav drawer item
+            urlBundl.clear();
             displayView(position);
         }
     }
@@ -197,42 +206,72 @@ public class Main extends Activity {
      * */
     public void displayView(int position) {
         // update the main content by replacing fragments
-        Fragment fragment = null;
+        fragment = null;
         switch (position) {
             case 0:
                 fragment = new RechercheFragment();
+                TAG_FRAGMENT = "recherche";
+                fragment.setArguments(urlBundl);
                 break;
             case 1:
                 fragment = new RechercheByFiltersFragment();
+                TAG_FRAGMENT = "rechercheByFilters";
                 break;
             case 2:
                 fragment = new AddObjectFragment();
+                TAG_FRAGMENT = "addObject";
                 break;
             case 3:
                 fragment = new MesObjetsFragment();
+                TAG_FRAGMENT = "mesObjets";
                 break;
             case 4:
                 fragment = new AfficheObjetFragment();
+                TAG_FRAGMENT = "afficheObjet";
+                fragment.setArguments(objBundl);
+                break;
             default:
                 break;
         }
 
         if (fragment != null) {
-            fragment.setArguments(bundl);
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_container, fragment).commit();
-
-
+                    .replace(R.id.frame_container, fragment, TAG_FRAGMENT).addToBackStack(TAG_FRAGMENT).commit();
 
             // update selected item and title, then close the drawer
             mDrawerList.setItemChecked(position, true);
             mDrawerList.setSelection(position);
             setTitle(navMenuTitles[position]);
+            if(position==0)
+                setTitle(navMenuTitles[5]);
             mDrawerLayout.closeDrawer(mDrawerList);
         } else {
             // error in creating fragment
             Log.e("MainActivity", "Error in creating fragment");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(!fragment.backAction()){
+            //Ask the user if they want to quit
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Déconnexion")
+                    .setMessage("Etes vous sur de vouloir vous déconnecter?")
+                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            //Stop the activity
+                            Main.this.finish();
+                        }
+
+                    })
+                    .setNegativeButton("Non", null)
+                    .show();
         }
     }
 
@@ -260,6 +299,5 @@ public class Main extends Activity {
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
-
 
 }

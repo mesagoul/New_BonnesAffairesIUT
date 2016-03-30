@@ -22,6 +22,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
 import com.acy.iut.fr.lesbonsplansdeliut.Util.Static;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * Created by mesagoul on 23/03/2016.
  */
-public class RechercheByFiltersFragment extends Fragment{
+public class RechercheByFiltersFragment extends UtilFragment {
 
     public RechercheByFiltersFragment(){}
     private Spinner spinnerCategories;

@@ -19,6 +19,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RechercheFragment extends Fragment {
+public class RechercheFragment extends UtilFragment {
 
     //static fields for ease of access
     private static final String FLAG_SUCCESS = "success";
@@ -48,6 +49,8 @@ public class RechercheFragment extends Fragment {
     private Objet selectedObject;
 
     private String url_request;
+
+    private Bundle savedState = null;
 
     public RechercheFragment(){}
 
@@ -191,20 +194,5 @@ public class RechercheFragment extends Fragment {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("curChoice", mCurCheckPosition);
     }
 }

@@ -20,6 +20,7 @@ import com.acy.iut.fr.lesbonsplansdeliut.Objets.Objet;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Connection;
 import com.acy.iut.fr.lesbonsplansdeliut.Pages.Main;
 import com.acy.iut.fr.lesbonsplansdeliut.R;
+import com.acy.iut.fr.lesbonsplansdeliut.Util.UtilFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * Created by boinnarr on 16/03/2016.
  */
-public class MesObjetsFragment extends Fragment{
+public class MesObjetsFragment extends UtilFragment {
 
     private static final String FLAG_SUCCESS = "success";
     private static final String FLAG_MESSAGE = "message";

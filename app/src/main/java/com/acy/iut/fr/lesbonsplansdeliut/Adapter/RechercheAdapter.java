@@ -53,7 +53,7 @@ public class RechercheAdapter extends ArrayAdapter<Objet> {
 
         DecimalFormat df = new DecimalFormat("0");
         Double prix = new Double(objet.getPrix());
-        viewHolder.prix.setText(df.format(prix).toString());
+        viewHolder.prix.setText(df.format(prix).toString() + "€");
 
 
 
