@@ -11,8 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.acy.iut.fr.lesbonsplansdeliut.Adapter.RechercheAdapter;
 import com.acy.iut.fr.lesbonsplansdeliut.Objets.Credential;
@@ -42,6 +44,7 @@ public class RechercheFragment extends UtilFragment {
     private static final String LOGIN_URL = "http://rudyboinnard.esy.es/android/";
     private ProgressBar progress;
     private int mCurCheckPosition;
+    private TextView noResult;
 
     //Declaration des valeurs necessaire a la creation de la listView des resultats de la recherche
     public ListView result_listView;
@@ -66,6 +69,8 @@ public class RechercheFragment extends UtilFragment {
         result_listView = (ListView) rootView.findViewById(R.id.result_listView);
         progress = (ProgressBar)rootView.findViewById(R.id.tamerprogress);
         url_request = (String) getArguments().getSerializable("url");
+        noResult = (TextView)rootView.findViewById(R.id.noResult);
+        noResult.setText("");
         if(url_request == null) {
             url_request = "method=Research";
         }
@@ -102,6 +107,8 @@ public class RechercheFragment extends UtilFragment {
         //display loading and status
         protected void onPreExecute() {
             progress.setVisibility(View.VISIBLE);
+            noResult.setText("");
+
         }
 
         //Get JSON data from the URL
@@ -145,7 +152,7 @@ public class RechercheFragment extends UtilFragment {
                 //alert the user of the status of the connection
                 success = result.getInt(FLAG_SUCCESS);
                 if (success == 0) {
-                    System.out.println("Marchepas");
+                    noResult.setText("Pas de résultat pour cette recherche");
                 } else {
 
 
@@ -166,9 +173,9 @@ public class RechercheFragment extends UtilFragment {
                     Log.d("DEBUG OBJET AFFICHE", result.toString());
                     // result_List.add(new Objet(result.getString("nom_objet"), result.getString("description_objet"), result.getDouble("prix")));
                     RechercheAdapter adapter = new RechercheAdapter(getActivity(), result_List);
-                    progress.setVisibility(View.INVISIBLE);
                     result_listView.setAdapter(adapter);
                 }
+                progress.setVisibility(View.INVISIBLE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

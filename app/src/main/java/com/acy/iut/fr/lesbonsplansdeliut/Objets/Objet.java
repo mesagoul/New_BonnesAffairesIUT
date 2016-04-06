@@ -1,5 +1,7 @@
 package com.acy.iut.fr.lesbonsplansdeliut.Objets;
 
+import android.widget.ProgressBar;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Objet implements Serializable {
     private String description;
     private List<String> url_photo1 = new ArrayList<>();
     private double prix;
+
 
 
     public Objet(int id, double prix, String description, String nom, int id_categorie, int id_utilisateur) {

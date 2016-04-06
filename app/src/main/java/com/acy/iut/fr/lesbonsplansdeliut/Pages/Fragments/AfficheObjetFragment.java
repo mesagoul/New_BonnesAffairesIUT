@@ -3,6 +3,8 @@ package com.acy.iut.fr.lesbonsplansdeliut.Pages.Fragments;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +42,10 @@ public class AfficheObjetFragment extends UtilFragment {
     private static final String URL = "http://rudyboinnard.esy.es/android/";
     public Objet ob = new Objet(1001, 0, "null", "null", 1, 1);
     public TextView nom_objet,prix_objet,descriptionObjet,nom_personne,mail_personne;
-    public Button supprimer;
+    private String mailContact;
+    public Button supprimer, contacter;
     public ImageView image_objet;
+    private ProgressBar progress;
 
     public AfficheObjetFragment(){}
 
@@ -49,7 +54,7 @@ public class AfficheObjetFragment extends UtilFragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.activity_affiche_objet, container, false);
-        new LoadPage().execute();
+
 
         ob = (Objet) getArguments().getSerializable("objet");
 
@@ -65,6 +70,25 @@ public class AfficheObjetFragment extends UtilFragment {
                 new DeleteObjet().execute();
             }
         });
+        contacter = (Button)(rootView.findViewById(R.id.contact));
+        contacter.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String[] emails = {Connection.UserLog.getMail().toString()};
+                String subject = "Votre Bonne Affaire";
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.putExtra(Intent.EXTRA_EMAIL, emails);
+                email.putExtra(Intent.EXTRA_SUBJECT, subject);
+
+                // need this to prompts email client only
+                email.setType("message/rfc822");
+
+                startActivity(Intent.createChooser(email, "Choose an Email client :"));
+            }
+        });
+        progress = (ProgressBar)(rootView.findViewById(R.id.progress));
+        progress.setVisibility(View.INVISIBLE);
+        new LoadPage().execute();
 
 
 
@@ -89,6 +113,7 @@ public class AfficheObjetFragment extends UtilFragment {
 
         //display loading and status
         protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
 
         }
 
@@ -141,9 +166,12 @@ public class AfficheObjetFragment extends UtilFragment {
                 if(success == 0){
                     System.out.println("Marchepas");
                 }else{
+                    mailContact = result.getString("mail");
                     nom_personne.setText(result.getString("nom")+" "+result.getString("prenom"));
                     mail_personne.setText(result.getString("mail"));
+
                 }
+                progress.setVisibility(View.INVISIBLE);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

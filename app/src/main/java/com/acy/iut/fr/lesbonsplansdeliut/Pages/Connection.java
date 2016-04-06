@@ -91,6 +91,7 @@ public class Connection extends Activity {
                     success = result.getInt(FLAG_SUCCESS);
                     if(success == 0){
                         status.setText(result.getString("message"));
+                        progress.setVisibility(View.INVISIBLE);
                     } else {
                         Log.d("DEBUG",result.getString("id"));
                         Log.d("DEBUG",result.getInt("id")+"");

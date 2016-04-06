@@ -64,11 +64,24 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/nom_personne" />
 
+        <ProgressBar
+            android:layout_width="74dp"
+            android:layout_height="74dp"
+            android:id="@+id/progress"
+            android:layout_gravity="center_horizontal"
+            android:indeterminate="false" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:id="@+id/mail_personne" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contacter le vendeur"
+            android:id="@+id/contact" />
 
         <Button
             android:layout_width="wrap_content"
